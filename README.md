@@ -116,6 +116,31 @@ for match in matches:
 
 ---
 
+## 🦜🔗 LangChain VectorStore Integration (50+ Database Backends)
+
+FaceTrust seamlessly integrates with **any LangChain `VectorStore`** (Qdrant, Pinecone, Chroma, Milvus, Weaviate, FAISS, pgvector, Redis, OpenSearch). Simply pass your existing LangChain store—FaceTrust will automatically detect and adapt it:
+
+```bash
+pip install facetrust[langchain]
+```
+
+```python
+from langchain_community.vectorstores import Qdrant # or Chroma, Pinecone, FAISS
+from facetrust import FaceTrust
+
+# Pass any existing LangChain VectorStore directly to FaceTrust:
+qdrant_store = Qdrant(...)
+auth = FaceTrust(storage=qdrant_store)
+
+# 1. Enroll identities directly into Qdrant/Pinecone
+auth.enroll("alice", "alice.jpg")
+
+# 2. Search probe face against millions of records in your cluster
+matches = auth.identify("cctv_frame.jpg", top_k=5)
+```
+
+---
+
 ## ⚡ Asynchronous FastAPI Integration
 
 ```python
