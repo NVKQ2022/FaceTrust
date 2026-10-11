@@ -1,0 +1,80 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "facetrust"
+version = "0.1.0"
+description = "Production-grade, modular Face Authentication with built-in Anti-Spoofing & ArcFace"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    { name = "NVKQ2022", email = "nguyenvietkyquan2022@gmail.com" }
+]
+keywords = [
+    "face-recognition",
+    "face-authentication",
+    "biometrics",
+    "anti-spoofing",
+    "liveness-detection",
+    "arcface",
+    "blazeface",
+    "minifasnet",
+    "onnx",
+    "computer-vision"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security",
+]
+dependencies = [
+    "numpy>=1.22.0",
+    "opencv-python-headless>=4.7.0",
+    "onnxruntime>=1.15.0",
+    "mediapipe>=0.10.0",
+    "pydantic>=2.0.0",
+    "pillow>=9.5.0",
+    "tqdm>=4.65.0",
+]
+
+[project.optional-dependencies]
+gpu = [
+    "onnxruntime-gpu>=1.15.0"
+]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.1.0",
+    "black>=23.0.0",
+]
+all = [
+    "onnxruntime-gpu>=1.15.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/NVKQ2022/FaceTrust"
+Documentation = "https://github.com/NVKQ2022/FaceTrust#readme"
+Repository = "https://github.com/NVKQ2022/FaceTrust.git"
+Issues = "https://github.com/NVKQ2022/FaceTrust/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["facetrust"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
