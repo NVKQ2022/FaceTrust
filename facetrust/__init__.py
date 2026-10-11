@@ -23,6 +23,7 @@ from facetrust.core.types import (
     VerificationResult,
 )
 from facetrust.backends.storage.langchain import LangChainVectorStoreAdapter
+from facetrust.integrations.langchain import FaceTrustEmbeddings, FaceVectorStore
 from facetrust.utils.image import ImageCodec
 
 __all__ = [
@@ -39,4 +40,6 @@ __all__ = [
     "MatchResult",
     "ImageCodec",
     "LangChainVectorStoreAdapter",
+    "FaceTrustEmbeddings",
+    "FaceVectorStore",
 ]
