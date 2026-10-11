@@ -7,6 +7,7 @@ from .antispoof.minifasnet import MiniFASNetAntiSpoofer
 from .alignment.affine_112 import Affine112Aligner
 from .embedding.arcface import ArcFaceMobileEmbedder
 from .storage.memory import MemoryStorage
+from .storage.langchain import LangChainVectorStoreAdapter
 
 __all__ = [
     "BlazeFaceDetector",
@@ -14,4 +15,5 @@ __all__ = [
     "Affine112Aligner",
     "ArcFaceMobileEmbedder",
     "MemoryStorage",
+    "LangChainVectorStoreAdapter",
 ]
