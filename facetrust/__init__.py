@@ -22,6 +22,7 @@ from facetrust.core.types import (
     Point2D,
     VerificationResult,
 )
+from facetrust.backends.storage.langchain import LangChainVectorStoreAdapter
 from facetrust.utils.image import ImageCodec
 
 __all__ = [
@@ -37,4 +38,5 @@ __all__ = [
     "VerificationResult",
     "MatchResult",
     "ImageCodec",
+    "LangChainVectorStoreAdapter",
 ]

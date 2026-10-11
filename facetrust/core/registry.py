@@ -129,15 +129,26 @@ class ModelRegistry:
     @classmethod
     def create_storage(
         cls,
-        target: Union[str, BaseStorage],
+        target: Union[str, BaseStorage, Any],
         **kwargs: Any,
     ) -> BaseStorage:
         if isinstance(target, BaseStorage):
             return target
-        name = target.lower()
-        if name not in cls._storages:
-            raise KeyError(f"Storage '{name}' not found. Available: {list(cls._storages.keys())}")
-        return cls._instantiate(cls._storages[name], **kwargs)
+
+        # Auto-detect LangChain VectorStore objects via duck-typing
+        if hasattr(target, "similarity_search_by_vector") or hasattr(
+            target, "similarity_search_by_vector_with_relevance_scores"
+        ):
+            from facetrust.backends.storage.langchain import LangChainVectorStoreAdapter
+            return LangChainVectorStoreAdapter(target, **kwargs)
+
+        if isinstance(target, str):
+            name = target.lower()
+            if name not in cls._storages:
+                raise KeyError(f"Storage '{name}' not found. Available: {list(cls._storages.keys())}")
+            return cls._instantiate(cls._storages[name], **kwargs)
+
+        raise TypeError(f"Invalid storage target: {type(target)}. Expected BaseStorage or LangChain VectorStore.")
 
     @classmethod
     def list_available(cls) -> Dict[str, list]:

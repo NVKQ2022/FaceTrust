@@ -52,6 +52,9 @@ dependencies = [
 gpu = [
     "onnxruntime-gpu>=1.15.0"
 ]
+langchain = [
+    "langchain-core>=0.1.0"
+]
 dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
@@ -60,6 +63,7 @@ dev = [
 ]
 all = [
     "onnxruntime-gpu>=1.15.0",
+    "langchain-core>=0.1.0",
 ]
 
 [project.urls]
