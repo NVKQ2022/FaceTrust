@@ -192,6 +192,14 @@ pytest tests/ -v
 
 ---
 
+## 🗺️ Roadmap & Commercial Vision
+
+FaceTrust follows an **Open-Core** model designed for enterprise scalability and commercial adoption. See our detailed engineering blueprint:
+- 📖 **[Product & Engineering Roadmap](ROADMAP.md)**: Details on Multi-Frame Temporal Liveness, Active Blink/Head Pose challenges, Vector Database scaling (Qdrant / Milvus), rPPG cardiovascular blood pulse detection, and ISO 30107-3 compliance.
+
+---
+
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+
