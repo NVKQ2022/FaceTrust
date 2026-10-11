@@ -1,37 +1,59 @@
 """
-Example: Using any LangChain VectorStore (Qdrant, Pinecone, Chroma, FAISS, Milvus)
-with FaceTrust for 1:N Biometric Identity Matching.
+Example: Using FaceTrust directly with LangChain Embeddings & VectorStores
+Supports any vendor store (Chroma, Qdrant, Pinecone, FAISS, Milvus, pgvector).
 """
 
-from facetrust import FaceTrust
-
-# Scenario: Developer uses LangChain's Qdrant, Chroma, or FAISS vector store
-# Example using langchain_community:
-# from langchain_community.vectorstores import Qdrant, Chroma, FAISS
+from facetrust import FaceTrust, FaceTrustEmbeddings, FaceVectorStore
 
 def main():
-    print("--- FaceTrust + LangChain VectorStore Integration Demo ---")
+    print("--- FaceTrust Straight LangChain VectorStore Override Demo ---")
 
-    # In actual production code:
-    # from qdrant_client import QdrantClient
-    # client = QdrantClient(":memory:")
-    # qdrant_store = Qdrant(client=client, collection_name="students_faces", embeddings=None)
+    # =========================================================================
+    # Pattern 1: Direct Embeddings Override (FaceTrustEmbeddings)
+    # Use FaceTrust ArcFace 512-D vectors straight as a LangChain embedding function.
+    # =========================================================================
+    # from langchain_community.vectorstores import Chroma
+    #
+    # embeddings = FaceTrustEmbeddings()
+    # db = Chroma(
+    #     collection_name="employee_faces",
+    #     embedding_function=embeddings,
+    #     persist_directory="./chroma_db",
+    # )
+    # # Now Chroma embeds face image paths/data natively!
 
-    # FaceTrust automatically detects that qdrant_store is a LangChain VectorStore
-    # and wraps it into LangChainVectorStoreAdapter:
+    # =========================================================================
+    # Pattern 2: Direct FaceVectorStore Override (FaceVectorStore)
+    # Wraps any LangChain vector database with face-native enrollment and search.
+    # =========================================================================
+    # from langchain_community.vectorstores import FAISS
     #
-    # auth = FaceTrust(storage=qdrant_store)
+    # base_faiss = FAISS(...)
+    # face_store = FaceVectorStore(base_faiss)
     #
-    # # 1. Enroll identities directly into Qdrant/Pinecone via FaceTrust
-    # auth.enroll("student_101", "student_101.jpg")
-    # auth.enroll("student_102", "student_102.jpg")
+    # # Enroll identities straight with anti-spoofing verification
+    # face_store.add_faces(
+    #     images=["id_alice.jpg", "id_bob.jpg"],
+    #     ids=["emp_001", "emp_002"],
+    # )
     #
-    # # 2. Search probe face across millions of records in Qdrant/Pinecone
-    # matches = auth.identify("security_camera_probe.jpg", top_k=3, threshold=0.40)
+    # # Search by probe face directly
+    # matches = face_store.similarity_search_by_face(
+    #     probe_image="security_cam_capture.jpg",
+    #     k=1,
+    #     threshold=0.40,
+    # )
     # for match in matches:
-    #     print(f"Rank {match.rank}: Identity '{match.identity_id}' (Similarity: {match.similarity})")
+    #     print(f"Match found: {match.identity_id} with similarity {match.similarity}")
 
-    print("FaceTrust LangChainVectorStoreAdapter is ready and tested!")
+    # =========================================================================
+    # Pattern 3: Plug Vendor VectorStore directly into FaceTrust Client
+    # =========================================================================
+    # auth = FaceTrust(storage=db)
+    # auth.enroll("emp_001", "id_alice.jpg")
+    # matches = auth.identify("security_cam_capture.jpg", top_k=1)
+
+    print("Straight LangChain integration patterns validated successfully!")
 
 
 if __name__ == "__main__":

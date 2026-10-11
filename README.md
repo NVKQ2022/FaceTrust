@@ -116,26 +116,55 @@ for match in matches:
 
 ---
 
-## 🦜🔗 LangChain VectorStore Integration (50+ Database Backends)
+## 🦜🔗 LangChain Native Integration (50+ Vector Store Backends)
 
-FaceTrust seamlessly integrates with **any LangChain `VectorStore`** (Qdrant, Pinecone, Chroma, Milvus, Weaviate, FAISS, pgvector, Redis, OpenSearch). Simply pass your existing LangChain store—FaceTrust will automatically detect and adapt it:
+FaceTrust provides **direct overrides** of LangChain's core contracts (`Embeddings` and `VectorStore`). You can use any vendor vector database (Chroma, Qdrant, Pinecone, FAISS, Milvus, Weaviate, pgvector) straight with ArcFace 512-D biometrics.
 
 ```bash
 pip install facetrust[langchain]
 ```
 
+### Pattern 1: Straight LangChain `Embeddings` Override
+Pass `FaceTrustEmbeddings` directly to **any** LangChain vector store:
+
 ```python
-from langchain_community.vectorstores import Qdrant # or Chroma, Pinecone, FAISS
+from langchain_community.vectorstores import Chroma
+from facetrust import FaceTrustEmbeddings
+
+# Initialize vendor store straight with FaceTrust 512-D ArcFace embeddings
+db = Chroma(
+    collection_name="employee_faces",
+    embedding_function=FaceTrustEmbeddings(),
+    persist_directory="./chroma_db",
+)
+```
+
+### Pattern 2: Straight `FaceVectorStore` Override
+Wrap any vendor vector store into `FaceVectorStore` for face-native enrollment and probe matching:
+
+```python
+from langchain_community.vectorstores import FAISS
+from facetrust import FaceVectorStore
+
+# Wrap any base store with FaceVectorStore
+face_store = FaceVectorStore(base_store)
+
+# Enroll faces with automatic anti-spoofing verification
+face_store.add_faces(images=["alice.jpg"], ids=["alice"])
+
+# Search straight using a probe photo
+matches = face_store.similarity_search_by_face("probe.jpg", k=1, threshold=0.40)
+for match in matches:
+    print(f"Matched: {match.identity_id} (Score: {match.similarity})")
+```
+
+### Pattern 3: Plug Vendor VectorStore into `FaceTrust` Client
+```python
 from facetrust import FaceTrust
 
-# Pass any existing LangChain VectorStore directly to FaceTrust:
-qdrant_store = Qdrant(...)
-auth = FaceTrust(storage=qdrant_store)
-
-# 1. Enroll identities directly into Qdrant/Pinecone
+# FaceTrust auto-detects and adapts any LangChain VectorStore instance:
+auth = FaceTrust(storage=db)
 auth.enroll("alice", "alice.jpg")
-
-# 2. Search probe face against millions of records in your cluster
 matches = auth.identify("cctv_frame.jpg", top_k=5)
 ```
 
